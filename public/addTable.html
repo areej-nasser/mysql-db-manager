@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Table</title>
+  </head>
+  <body>
+    <h2>Add Table</h2>
+    <form id="tableForm">
+      <label>Table Name:</label>
+      <input type="text" id="tableName" required /><br />
+      <label>Columns (e.g., id INT, name VARCHAR(50)):</label>
+      <input type="text" id="columns" required /><br />
+      <button type="submit">Create Table</button>
+    </form>
+    <p id="msg"></p>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const dbName = params.get("db");
+
+      document
+        .getElementById("tableForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const body = {
+            dbName,
+            tableName: document.getElementById("tableName").value,
+            columns: document.getElementById("columns").value,
+          };
+
+          const res = await fetch("/create-table", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+          const data = await res.json();
+          document.getElementById("msg").textContent = data.message;
+        });
+    </script>
+  </body>
+</html>

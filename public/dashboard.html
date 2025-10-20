@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <style>
+      button {
+        margin: 5px;
+        padding: 5px 10px;
+      }
+      table {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #aaa;
+        padding: 5px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Dashboard</h2>
+    <button onclick="window.location.href='addDatabase.html'">
+      Add Database
+    </button>
+    <button onclick="window.location.href='addUser.html'">Add User</button>
+
+    <h3>Databases</h3>
+    <table border="1" id="dbTable">
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </table>
+
+    <h3>Users</h3>
+    <table border="1" id="usersTable">
+      <tr>
+        <th>User</th>
+        <th>Host</th>
+      </tr>
+    </table>
+
+    <script>
+      async function loadData() {
+        const res = await fetch("/data");
+        const data = await res.json();
+
+        const dbTable = document.getElementById("dbTable");
+        data.databases.forEach((db) => {
+          dbTable.innerHTML += ` <tr>
+              <td>${db.Database}</td>
+              <td>
+                <button onclick="goToAddTable('${db.Database}')"> Add Table</button>
+              </td>
+            </tr>`;
+        });
+
+        const usersTable = document.getElementById("usersTable");
+        data.users.forEach((u) => {
+          usersTable.innerHTML += `<tr><td>${u.User}</td><td>${u.Host}</td></tr>`;
+        });
+      }
+
+      function goToAddTable(dbName) {
+        window.location.href = `addTable.html?db=${dbName}`;
+      }
+      loadData();
+    </script>
+  </body>
+</html>

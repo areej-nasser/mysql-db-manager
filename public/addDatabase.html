@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Add Database</title>
+  </head>
+  <body>
+    <h2>Add Database</h2>
+    <form id="dbForm">
+      <label>Database Name:</label>
+      <input type="text" id="dbName" required />
+      <button type="submit">Create</button>
+    </form>
+    <p id="msg"></p>
+
+    <script>
+      document
+        .getElementById("dbForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const dbName = document.getElementById("dbName").value;
+
+          const res = await fetch("/create-database", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ dbName }),
+          });
+          const data = await res.json();
+          document.getElementById("msg").textContent = data.message;
+        });
+    </script>
+  </body>
+</html>
